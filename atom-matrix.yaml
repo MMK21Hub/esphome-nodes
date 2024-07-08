@@ -1,0 +1,98 @@
+## BOILERPLATE
+
+esphome:
+  name: atom-matrix
+  friendly_name: "Matrix"
+  comment: "M5Stack ATOM Matrix for LED status updates in the Living Room"
+
+esp32:
+  board: m5stack-atom
+  framework:
+    type: arduino
+
+logger:
+
+wifi:
+  networks: !secret wifi
+
+api:
+  encryption:
+    key: "JNj7PgqTdG1lCKrqJNK3bMwSIsQ4Hvv+O9bvngbCZ0s="
+
+ota:
+  password: !secret ota_password
+
+## STANDARD BLE PROXY SETUP
+# Disabled because we don't need one in the living room yet
+
+# esp32_ble_tracker:
+#   scan_parameters:
+#     interval: 1100ms
+#     window: 1100ms
+#     active: true
+
+# bluetooth_proxy:
+#   active: true
+
+## HARDWARE
+
+sensor:
+  - platform: internal_temperature
+    name: "CPU temperature"
+  - platform: wifi_signal
+    id: wifi_signal_stringth
+    name: "Signal strength"
+    update_interval: 5s
+
+button:
+  - platform: safe_mode
+    name: "Reboot safe mode"
+    entity_category: diagnostic
+  - platform: restart
+    name: "Reboot"
+    entity_category: diagnostic
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 39
+      inverted: true
+    name: Button
+    on_press:
+      then:
+        # - light.toggle: status_led
+
+light:
+  - platform: neopixelbus # 5x5 RGB Matrix (WS2812C)
+    name: "Display"
+    id: matrix_light
+    pin: 27
+    variant: WS2812x
+    num_leds: 25
+    color_correct: [30%, 30%, 30%] # Limit LED power to avoid damage to the matrix
+    default_transition_length: 0s
+    type: GRB
+    internal: True
+
+display:
+  - platform: addressable_light
+    addressable_light_id: matrix_light
+    id: matrix_display
+    height: 5
+    width: 5
+    rotation: 180 # USB port is at the bottom
+    update_interval: 2s
+    lambda: |-
+      it.fill(COLOR_ON);
+
+## DEVICE STATE
+
+select:
+  - platform: template
+    id: mode
+    name: "Mode"
+    optimistic: true
+    options:
+      - wifi_signal
+      - disabled
+    initial_option: wifi_signal

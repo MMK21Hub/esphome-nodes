@@ -1,0 +1,96 @@
+# Boilerplate
+esphome:
+  name: seeed-acacia
+  friendly_name: Seeed acacia
+  platformio_options:
+    board_build.flash_mode: dio
+    board_build.mcu: esp32c3
+  on_boot:
+    priority: -100
+    then:
+      - delay: 15s
+      - while: 
+          condition:
+            wifi.enabled
+          then:
+            - delay: 5s
+            - if:
+                condition: wifi.connected
+                then:
+                - lambda: |-
+                    id(ble_tracker).set_scan_continuous(true); 
+                    id(ble_tracker).start_scan();
+                else:
+                - esp32_ble_tracker.stop_scan:
+
+esp32:
+  board: seeed_xiao_esp32c3
+  variant: esp32c3
+  framework:    
+    type: esp-idf
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+api:
+  encryption:
+    key: "R8SmCKVeAlCeKcn4i2xYr/UwSJZNc35ZevZOl0aZuMQ="
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  networks: !secret wifi
+    
+# BLE proxy
+esp32_ble_tracker:
+  id: ble_tracker
+  scan_parameters:
+    active: false
+    continuous: false
+
+bluetooth_proxy:
+  active: false
+
+sensor:
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 10s
+  - platform: internal_temperature
+    name: "CPU temperature"
+
+text_sensor:
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+  - platform: version
+    name: "Firmware"
+    entity_category: diagnostic
+
+
+# button:
+#   - platform: restart
+#     name: "Reboot"
+#     entity_category: diagnostic
+
+# binary_sensor:
+#   # Button labelled "B"
+#   # Doesn't appear to be working
+#   - platform: gpio
+#     name: "Button"
+#     pin:
+#       number: GPIO0
+#       # number: GPIO9
+#       mode: INPUT_PULLUP
+#     filters:
+#       - invert:
+
+# binary_sensor:
+#   - platform: gpio
+#     name: "Touch Sensor"
+#     pin:
+#       number: T0
+#       mode: INPUT_PULLUP
+#     filters:
+#       - invert:

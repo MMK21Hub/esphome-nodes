@@ -1,0 +1,54 @@
+esphome:
+  name: dirt
+  comment: A dirt-cheap ESP8266 board for testing stuff
+  friendly_name: Dirt ESP
+
+# Board: https://www.aliexpress.com/item/1005006307170375.html "Wireless Module CH340/CP2102 NodeMcu V3 V2 Lua WIFI Internet of Things Develop Board based ESP8266 ESP-12E with PCB Antenna" "V3 CH340 With Cable"
+
+esp8266:
+  board: nodemcuv2
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_key_dirt
+  services:
+    - service: play_audio
+      variables:
+        rtttl_str: string
+      then:
+        - rtttl.play:
+            rtttl: !lambda 'return rtttl_str;'
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  networks: !secret wifi
+
+output:
+  - platform: esp8266_pwm
+    pin: D1
+    # frequency: 1000 Hz
+    id: pwm_1
+
+
+rtttl:
+  output: pwm_1
+  id: speaker
+  gain: 60%
+
+text_sensor:
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+  - platform: version
+    name: "Firmware"
+    entity_category: diagnostic
+
+sensor:
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 10s

@@ -1,0 +1,118 @@
+# Boilerplate
+esphome:
+  name: back-graden
+  comment: ESP32 dev board to go in the back graden, as a rain sensor
+  friendly_name: Weather ESP
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+
+api:
+  encryption:
+    key: "R8SmCKVeAlCeKcn4i2xYr/UwSJZNc35ZevZOl0aZuMQ="
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  networks: !secret wifi
+    
+# BLE Proxy
+# esp32_ble_tracker:
+#   scan_parameters:
+#     interval: 1100ms
+#     window: 1100ms
+#     active: true
+
+# bluetooth_proxy:
+#   active: true
+
+sensor:
+  - platform: internal_temperature
+    name: "CPU temperature"
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 60s
+  - platform: adc
+    pin: 33
+    name: "Water sensor voltage"
+    update_interval: 2s
+    attenuation: auto
+    # attenuation: 11db
+    id: water
+
+text_sensor:
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+  - platform: template
+    name: Wetness
+    # Normal voltage = 0.075 V (i.e. around 0.08 V)
+    lambda: |-
+      float voltage = id(water).state;
+      if (voltage < 0.08) {
+        return {"Dry"};
+      } else if (voltage < 1.0) {
+        return {"Damp"};
+      } else if (voltage < 1.5) {
+        return {"Moist"};
+      } else {
+        return {"Soaked"};
+      }
+    update_interval: 10s
+
+output:
+  - platform: ledc
+    id: led_pin_1 # blue
+    pin: 25
+  - platform: ledc
+    id: led_pin_2 # yellow
+    pin: 26
+
+light:
+  - platform: monochromatic
+    output: led_pin_1
+    default_transition_length: 0s
+    name: "Blue LED"
+  - platform: monochromatic
+    output: led_pin_2
+    default_transition_length: 0s
+    name: "Yellow LED"
+
+
+button:
+  - platform: safe_mode
+    name: "Reboot safe mode"
+    entity_category: diagnostic
+  - platform: restart
+    name: "Reboot"
+    entity_category: diagnostic
+
+binary_sensor:
+  # Button labelled "Boot"
+  - platform: gpio
+    name: "Button"
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+    filters:
+      - invert:
+  - platform: template
+    name: Water sensor
+    lambda: "return id(water).state > 0.3;"
+    device_class: moisture
+
+
+# binary_sensor:
+#   - platform: gpio
+#     name: "Touch Sensor"
+#     pin:
+#       number: T0
+#       mode: INPUT_PULLUP
+#     filters:
+#       - invert:

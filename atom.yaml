@@ -1,0 +1,111 @@
+esphome:
+  friendly_name: Garden atom
+  name: atom
+  comment: BLE Proxy for my under the plastic (M5Stack Atom)
+
+  on_boot: 
+  - priority: 790
+    then:
+      - light.turn_on:
+          id: status_led
+          brightness: 100%
+          red: 100%
+          green: 100%
+          blue: 0%
+          flash_length: 1s
+  - priority: -200
+    then:
+      - light.turn_on:
+          id: status_led
+          red: 0%
+          green: 100%
+          blue: 0%
+          flash_length: 1s
+
+esp32:
+  board: m5stack-atom
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "R8SmCKVeAlCeKcn4i2xYr/UwSJZNc35ZevZOl0aZuMQ="
+
+ota:
+  password: "2d0fbdddbfea1acdf0dfaf548e14f18f"
+
+wifi:
+  networks: !secret wifi
+    
+light:
+  - platform: fastled_clockless
+    chipset: WS2812B
+    pin: 27
+    num_leds: 1
+    rgb_order: GRB
+    id: status_led
+    name: Light
+    default_transition_length: 0.1s
+    effects:
+      - random:
+      - flicker:
+      - addressable_rainbow:
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 39
+      inverted: true
+    name: Button
+    on_press:
+      then:
+        - light.toggle: status_led
+
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 1100ms
+    window: 1100ms
+    active: true
+
+bluetooth_proxy:
+  active: true
+
+button:
+  - platform: safe_mode
+    name: "Reboot safe mode"
+    entity_category: diagnostic
+  - platform: restart
+    name: "Reboot"
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+    scan_results:
+      name: Available networks
+      entity_category: diagnostic
+  - platform: version
+    name: "Firmware"
+    entity_category: diagnostic
+
+sensor:
+  # Conflicts with button on pin 39
+  # - platform: esp32_hall
+  #   name: "Hall Sensor"
+  #   update_interval: 30s
+  - platform: template
+    id: cpu_temp
+    lambda: return temperatureRead();
+    name: CPU temperature
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 60s

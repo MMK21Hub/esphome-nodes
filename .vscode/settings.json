@@ -1,0 +1,12 @@
+{
+  "files.associations": {
+    "*.yaml": "esphome"
+  },
+  "[esphome]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.formatOnSave": true
+  },
+  "python.defaultInterpreterPath": "../bin/python3.9"
+}

@@ -1,0 +1,79 @@
+# DEVICE=/dev/seeed-cherry
+
+## Boilerplate for Seeed boards
+
+esphome:
+  name: seeed-cherry
+  friendly_name: Seeed cherry
+  platformio_options:
+    board_build.flash_mode: dio
+    board_build.mcu: esp32c3
+  # If the Seeed board disconnects from WiFi any time after boot,
+  # we hold off scanning for BLE devices for a few seconds to give the chip time to reconnect
+  # (otherwise the radio seems to get overloaded or something)
+  on_boot:
+    priority: -100
+    then:
+      - delay: 15s
+      - while: 
+          condition:
+            wifi.enabled
+          then:
+            - delay: 5s
+            - if:
+                condition: wifi.connected
+                then:
+                - lambda: |-
+                    id(ble_tracker).set_scan_continuous(true); 
+                    id(ble_tracker).start_scan();
+                else:
+                - esp32_ble_tracker.stop_scan:
+
+esp32:
+  board: seeed_xiao_esp32c3
+  variant: esp32c3
+  framework:
+    type: esp-idf
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+## WiFi stuff
+wifi:
+  networks: !secret wifi
+api:
+  encryption:
+    key: !secret api_key_cherry
+ota:
+  password: !secret ota_password
+
+
+## BLE proxy
+esp32_ble_tracker:
+  id: ble_tracker
+  scan_parameters:
+    # active: false
+    continuous: false
+bluetooth_proxy:
+  active: false
+
+sensor:
+  ## CPU temperature monitoring
+  - platform: internal_temperature
+    name: "CPU temperature"
+  ## Diagnostic sensors
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 10s
+  - platform: internal_temperature
+    name: "CPU temperature"
+
+text_sensor:
+  ## Diagnostic text sensors
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+  - platform: version
+    name: "Firmware"
+    entity_category: diagnostic

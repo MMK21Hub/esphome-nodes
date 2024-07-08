@@ -1,0 +1,53 @@
+# Some docs for the board: https://www.sudo.is/docs/esphome/boards/esp32c3supermini/
+
+esphome:
+  name: super-mini
+  comment: ESP32 dev board to go in the back graden, as a rain sensor
+  friendly_name: Speaker box
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_key_super_mini
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  networks: !secret wifi
+
+sensor:
+  - platform: internal_temperature
+    name: "CPU temperature"
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 60s
+
+text_sensor:
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+
+button:
+  - platform: safe_mode
+    name: "Reboot safe mode"
+    entity_category: diagnostic
+  - platform: restart
+    name: "Reboot"
+    entity_category: diagnostic
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 9
+      inverted: true
+    name: "Boot button"

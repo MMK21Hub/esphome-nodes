@@ -1,0 +1,61 @@
+# DEVICE=/dev/seeed-birch
+
+## Boilerplate for Seeed boards
+
+esphome:
+  name: seeed-birch
+  friendly_name: Seeed birch
+  platformio_options:
+    board_build.flash_mode: dio
+    board_build.mcu: esp32c3
+
+esp32:
+  board: seeed_xiao_esp32c3
+  variant: esp32c3
+  framework:
+    type: esp-idf
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+## NTP
+
+time:
+  - platform: sntp
+    id: sntp_time
+
+## WiFi stuff
+
+wifi:
+  #networks: !secret school_wifi
+  networks: !secret wifi
+
+
+api:
+  encryption:
+    key: "fYQuAvpD21rUxQ5tYYGEjA2hUiVPbg5GeldpV9yLAYE="
+  reboot_timeout: 0s
+
+ota:
+  password: !secret ota_password
+
+
+wireguard:
+  peer_endpoint: mmk21.duckdns.org
+  address: "10.129.164.100" # This gets ignored by the Wireguard server anyway
+  private_key: !secret wireguard_private_key
+  peer_public_key: FxbHMBhgdJ1Z4QvUONGz1udzPao6rzyJYpMssemvfXc=
+  peer_preshared_key: !secret wireguard_pre_shared_key
+
+
+# web_server:
+#   port: 80
+#   include_internal: True
+#   ota: False
+#   local: True
+
+## Other sensors
+
+sensor:
+  - platform: internal_temperature
+    name: "CPU temperature"
