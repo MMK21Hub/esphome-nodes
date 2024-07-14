@@ -17,7 +17,8 @@ api:
     key: !secret api_key_tzt_lite
 
 ota:
-  password: !secret ota_password
+  - platform: esphome
+    password: !secret ota_password
 
 wifi:
   networks: !secret wifi
