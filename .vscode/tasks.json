@@ -18,9 +18,11 @@
       "problemMatcher": []
     },
     {
-      "type": "esphome",
-      "problemMatcher": [],
-      "label": "Flash ESP device OTA"
-    }
+      "label": "Flash ESP device OTA",
+      "type": "shell",
+      "command": "~/.local/bin/esphome",
+      "args": ["run", "${file}", "--device", "OTA"],
+      "problemMatcher": []
+    },
   ]
 }
