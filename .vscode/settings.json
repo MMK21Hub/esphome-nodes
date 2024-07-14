@@ -8,5 +8,4 @@
     "editor.autoIndent": "advanced",
     "editor.formatOnSave": true
   },
-  "python.defaultInterpreterPath": "../bin/python3.9"
 }
