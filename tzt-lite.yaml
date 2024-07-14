@@ -43,10 +43,3 @@ button:
   - platform: restart
     name: "Reboot"
     entity_category: diagnostic
-
-binary_sensor:
-  - platform: gpio
-    pin:
-      number: 9
-      inverted: true
-    name: "Boot button"
