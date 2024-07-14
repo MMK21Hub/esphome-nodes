@@ -1,0 +1,51 @@
+# Product: https://www.aliexpress.com/item/1005005626813706.html "TZT ESP32 Lite V1.0.0 Wifi Bluetooth Development Board ESP32 ESP-32 REV1 CH340G MicroPython 4MB Micro/TYPE-C USB For Arduino"
+
+esphome:
+  name: tzt-lite
+  comment: ESP32 dev board intended to power a speaker
+  friendly_name: Speaker v2
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_key_tzt_lite
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  networks: !secret wifi
+
+sensor:
+  - platform: internal_temperature
+    name: "CPU temperature"
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 60s
+
+text_sensor:
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+
+button:
+  - platform: safe_mode
+    name: "Reboot safe mode"
+    entity_category: diagnostic
+  - platform: restart
+    name: "Reboot"
+    entity_category: diagnostic
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 9
+      inverted: true
+    name: "Boot button"
