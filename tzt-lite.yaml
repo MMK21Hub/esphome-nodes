@@ -44,13 +44,17 @@ button:
     name: "Reboot"
     entity_category: diagnostic
 
+output:
+  - platform: esp32_dac
+    pin: 25
+    id: dac_output
+
 i2s_audio:
-  i2s_lrclk_pin: 14
-  i2s_bclk_pin: 27
+  i2s_lrclk_pin: 14 # unused
+  i2s_bclk_pin: 27 # unused
 
 media_player:
   - platform: i2s_audio
     name: Speaker
-    dac_type: external
-    i2s_dout_pin: 26
-    mode: mono
+    dac_type: internal
+    mode: left
