@@ -13,31 +13,13 @@ logger:
 api:
   encryption:
     key: !secret api_key_dirt
-  services:
-    - service: play_audio
-      variables:
-        rtttl_str: string
-      then:
-        - rtttl.play:
-            rtttl: !lambda 'return rtttl_str;'
 
 ota:
+  platform: esphome
   password: !secret ota_password
 
 wifi:
   networks: !secret wifi
-
-output:
-  - platform: esp8266_pwm
-    pin: D1
-    # frequency: 1000 Hz
-    id: pwm_1
-
-
-rtttl:
-  output: pwm_1
-  id: speaker
-  gain: 60%
 
 text_sensor:
   - platform: wifi_info
@@ -52,3 +34,33 @@ sensor:
   - platform: wifi_signal
     name: "Signal strength"
     update_interval: 10s
+
+switch:
+  - platform: gpio
+    pin:
+      number: D0
+      mode:
+        output: true
+    id: pulldown_0
+    name: GPIO 0
+  - platform: gpio
+    pin:
+      number: D1
+      mode:
+        output: true
+    id: pulldown_1
+    name: GPIO 1
+  - platform: gpio
+    pin:
+      number: D2
+      mode:
+        output: true
+    id: pulldown_2
+    name: GPIO 2
+  - platform: gpio
+    pin:
+      number: D3
+      mode:
+        output: true
+    id: pulldown_3
+    name: GPIO 3
