@@ -39,6 +39,7 @@ switch:
   - platform: gpio
     pin:
       number: D0
+      inverted: true
       mode:
         output: true
     id: pulldown_0
@@ -46,6 +47,7 @@ switch:
   - platform: gpio
     pin:
       number: D1
+      inverted: true
       mode:
         output: true
     id: pulldown_1
@@ -53,6 +55,7 @@ switch:
   - platform: gpio
     pin:
       number: D2
+      inverted: true
       mode:
         output: true
     id: pulldown_2
@@ -60,6 +63,7 @@ switch:
   - platform: gpio
     pin:
       number: D3
+      inverted: true
       mode:
         output: true
     id: pulldown_3
