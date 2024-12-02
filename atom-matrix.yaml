@@ -77,6 +77,7 @@ light:
     id: matrix_light
     color_correct: [30%, 30%, 30%] # Limit LED power to avoid damage to the matrix
     default_transition_length: 0s
+    internal: true
     restore_mode: ALWAYS_ON
 
 # display:
@@ -100,7 +101,7 @@ display:
     update_interval: 0.5s
     # show_test_card: true
     lambda: |-
-      // Draw a bulls-eye pattern
+      it.fill(COLOR_OFF);
       Color red = Color(0xFF0000);
       Color green = Color(0x00FF00);
       Color blue = Color(0x0000FF);
@@ -112,10 +113,10 @@ display:
       } else {
         it.rectangle(0, 0, 5, 5, green);
       }
-      // ESP_LOGI("date_display", "Current day: %02d", day);
-      // ESP_LOGI("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
-      //    time.year, time.month, time.day_of_month,
-      //    time.hour, time.minute, time.second);
+      ESP_LOGI("date_display", "Current day: %02d", day);
+      ESP_LOGI("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
+         time.year, time.month, time.day_of_month,
+         time.hour, time.minute, time.second);
 
 ## DEVICE STATE
 #
@@ -125,6 +126,7 @@ select:
     name: "Mode"
     optimistic: true
     options:
-      - wifi_signal
-      - disabled
-    initial_option: wifi_signal
+      - Christmas
+      - Wifi signal
+      - Disabled
+    initial_option: Christmas
