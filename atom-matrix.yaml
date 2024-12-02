@@ -92,6 +92,7 @@ display:
     height: 5
     rotation: 180° # USB port is at the bottom
     update_interval: 16ms
+    # show_test_card: true
     lambda: |-
       // Draw a bulls-eye pattern
       Color red = Color(0xFF0000);
