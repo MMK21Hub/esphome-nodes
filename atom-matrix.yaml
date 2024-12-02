@@ -106,20 +106,33 @@ display:
       Color green = Color(0x00FF00);
       Color blue = Color(0x0000FF);
       auto time = id(time_now).now();
-      int day = time.day_of_month;
+      // int day = time.day_of_month;
+      int day = id(day_override).state;
       if (day == 0 || time.year == 1970) {
         // Hack: If the year is 1970, we probably just haven't got a time from Home Assistant yet
         it.filled_rectangle(0, 0, 5, 5, red);
-      } else {
-        it.rectangle(0, 0, 5, 5, green);
+        return;
       }
-      ESP_LOGI("date_display", "Current day: %02d", day);
-      ESP_LOGI("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
-         time.year, time.month, time.day_of_month,
-         time.hour, time.minute, time.second);
+      Color color = green;
+      // Draw filled rows
+      int full_rows = day / 5;
+      it.filled_rectangle(0, 0, 5, full_rows);
+      // Draw the solid pixels for the bottom row
+      int remaining_pixels = day % 5;
+      int solid_pixels = remaining_pixels - 1;
+      if (solid_pixels >= 0) {
+        it.filled_rectangle(full_rows, 0, solid_pixels, 1);
+      }
+      // Draw the blinky pixel for the bottom row
+      it.draw_pixel_at(full_rows, remaining_pixels, red);
+
+      // ESP_LOGI("date_display", "Current day: %02d", day);
+      // ESP_LOGI("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
+      //    time.year, time.month, time.day_of_month,
+      //    time.hour, time.minute, time.second);
 
 ## DEVICE STATE
-#
+
 select:
   - platform: template
     id: mode
@@ -130,3 +143,12 @@ select:
       - Wifi signal
       - Disabled
     initial_option: Christmas
+
+number:
+  - platform: template
+    optimistic: true
+    min_value: 1
+    max_value: 25
+    step: 1
+    id: day_override
+    name: Current day
