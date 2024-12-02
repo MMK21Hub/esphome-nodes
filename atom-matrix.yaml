@@ -122,14 +122,14 @@ display:
       int solid_pixels = remaining_pixels - 1;
       if (solid_pixels >= 0) {
         it.filled_rectangle(full_rows, 0, solid_pixels, 1);
-        ESP_LOGI("date_display", "%d remaining, drawing rect (%d, %d, %d, %d)", remaining_pixels, full_rows, 0, solid_pixels, 1);
+        ESP_LOGD("date_display", "%d remaining, drawing rect (%d, %d, %d, %d)", remaining_pixels, full_rows, 0, solid_pixels, 1);
       }
       // Draw the blinky pixel for the bottom row
-      ESP_LOGI("date_display", "Special pixel @ (%d, %d)", full_rows, remaining_pixels);
+      ESP_LOGD("date_display", "Special pixel @ (%d, %d)", full_rows, remaining_pixels);
       it.draw_pixel_at(full_rows, remaining_pixels, red);
 
-      // ESP_LOGI("date_display", "Current day: %02d", day);
-      // ESP_LOGI("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
+      // ESP_LOGD("date_display", "Current day: %02d", day);
+      // ESP_LOGD("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
       //    time.year, time.month, time.day_of_month,
       //    time.hour, time.minute, time.second);
 
