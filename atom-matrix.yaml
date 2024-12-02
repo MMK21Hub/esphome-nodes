@@ -96,7 +96,7 @@ display:
     addressable_light_id: matrix_light
     width: 5
     height: 5
-    rotation: 180° # USB port is at the bottom
+    rotation: 0° # USB port is at the bottom
     # update_interval: 16ms
     update_interval: 0.5s
     # show_test_card: true
