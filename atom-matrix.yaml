@@ -20,7 +20,8 @@ api:
     key: "JNj7PgqTdG1lCKrqJNK3bMwSIsQ4Hvv+O9bvngbCZ0s="
 
 ota:
-  password: !secret ota_password
+  - platform: esphome
+    password: !secret ota_password
 
 ## STANDARD BLE PROXY SETUP
 # Disabled because we don't need one in the living room yet
@@ -63,27 +64,25 @@ binary_sensor:
         # - light.toggle: status_led
 
 light:
-  - platform: neopixelbus # 5x5 RGB Matrix (WS2812C)
-    name: "Display"
-    id: matrix_light
+  - platform: fastled_clockless # 5x5 RGB Matrix (WS2812C)
+    chipset: WS2812
     pin: 27
-    variant: WS2812x
     num_leds: 25
+    rgb_order: GRB
+    name: "Display"
     color_correct: [30%, 30%, 30%] # Limit LED power to avoid damage to the matrix
     default_transition_length: 0s
-    type: GRB
-    internal: True
 
-display:
-  - platform: addressable_light
-    addressable_light_id: matrix_light
-    id: matrix_display
-    height: 5
-    width: 5
-    rotation: 180 # USB port is at the bottom
-    update_interval: 2s
-    lambda: |-
-      it.fill(COLOR_ON);
+# display:
+#   - platform: addressable_light
+#     addressable_light_id: matrix_light
+#     id: matrix_display
+#     height: 5
+#     width: 5
+#     rotation: 180 # USB port is at the bottom
+#     update_interval: 2s
+#     lambda: |-
+#       it.fill(COLOR_ON);
 
 ## DEVICE STATE
 

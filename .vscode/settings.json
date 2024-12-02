@@ -8,4 +8,5 @@
     "editor.autoIndent": "advanced",
     "editor.formatOnSave": true
   },
+  "cSpell.words": ["ESPHome"]
 }
