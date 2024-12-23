@@ -65,7 +65,7 @@ binary_sensor:
     name: Button
     on_press:
       then:
-        # - light.toggle: status_led
+        - light.toggle: matrix_light
 
 light:
   - platform: fastled_clockless # 5x5 RGB Matrix (WS2812C)
@@ -78,7 +78,6 @@ light:
     color_correct: [30%, 30%, 30%] # Limit LED power to avoid damage to the matrix
     default_transition_length: 0s
     internal: true
-    restore_mode: ALWAYS_ON
 
 # display:
 #   - platform: addressable_light
@@ -115,18 +114,19 @@ display:
       }
       Color color = green;
       // Draw filled rows
-      int full_rows = day / 5;
+      int full_rows = (day - 1) / 5; // Subtract 1 from `day` to account for the blinky pixel
       it.filled_rectangle(0, 0, 5, full_rows);
       // Draw the solid pixels for the bottom row
       int remaining_pixels = day % 5;
       int solid_pixels = remaining_pixels - 1;
+      ESP_LOGD("date_display", "solid_pixels=%d", solid_pixels);
       if (solid_pixels >= 0) {
-        it.filled_rectangle(full_rows, 0, solid_pixels, 1);
-        ESP_LOGD("date_display", "%d remaining, drawing rect (%d, %d, %d, %d)", remaining_pixels, full_rows, 0, solid_pixels, 1);
+        it.filled_rectangle(0, full_rows, solid_pixels, 1);
+        ESP_LOGD("date_display", "%d remaining, drawing rect (%d, %d, %d, %d)", 0, full_rows, solid_pixels, 1);
       }
       // Draw the blinky pixel for the bottom row
-      ESP_LOGD("date_display", "Special pixel @ (%d, %d)", full_rows, remaining_pixels);
-      it.draw_pixel_at(full_rows, remaining_pixels, red);
+      ESP_LOGD("date_display", "Special pixel @ (%d, %d)", remaining_pixels - 1, full_rows);
+      it.draw_pixel_at(remaining_pixels - 1, full_rows, red);
 
       // ESP_LOGD("date_display", "Current day: %02d", day);
       // ESP_LOGD("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
