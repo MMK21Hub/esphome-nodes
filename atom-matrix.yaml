@@ -115,13 +115,13 @@ display:
       Color color = green;
       // Draw filled rows
       int full_rows = (day - 1) / 5; // Subtract 1 from `day` to account for the blinky pixel
-      it.filled_rectangle(0, 0, 5, full_rows);
+      it.filled_rectangle(0, 0, 5, full_rows, color);
       // Draw the solid pixels for the bottom row
       int remaining_pixels = (day - 1) % 5; // Again, excluding the blinky pixel
       int solid_pixels = remaining_pixels - 1;
       //ESP_LOGD("date_display", "solid_pixels=%d", remaining_pixels);
       if (remaining_pixels >= 0) {
-        it.filled_rectangle(0, full_rows, remaining_pixels, 1);
+        it.filled_rectangle(0, full_rows, remaining_pixels, 1, color);
         ESP_LOGD("date_display", "%d remaining, drawing rect (%d, %d, %d, %d)", 0, full_rows, remaining_pixels, 1);
       }
       // Draw the blinky pixel for the bottom row
