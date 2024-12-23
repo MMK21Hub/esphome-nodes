@@ -10,6 +10,11 @@ esp32:
   framework:
     type: arduino
 
+globals:
+  - id: current_blink_state # Flip-flops between true and false to control the blinking of an LED
+    type: bool
+    initial_value: "false"
+
 logger:
 
 wifi:
@@ -97,7 +102,7 @@ display:
     height: 5
     rotation: 0° # USB port is at the bottom
     # update_interval: 16ms
-    update_interval: 0.5s
+    update_interval: 0.4s
     # show_test_card: true
     lambda: |-
       it.fill(COLOR_OFF);
@@ -122,11 +127,14 @@ display:
       //ESP_LOGD("date_display", "solid_pixels=%d", remaining_pixels);
       if (remaining_pixels >= 0) {
         it.filled_rectangle(0, full_rows, remaining_pixels, 1, color);
-        ESP_LOGD("date_display", "%d remaining, drawing rect (%d, %d, %d, %d)", 0, full_rows, remaining_pixels, 1);
+        //ESP_LOGD("date_display", "%d remaining, drawing rect (%d, %d, %d, %d)", 0, full_rows, remaining_pixels, 1);
       }
       // Draw the blinky pixel for the bottom row
-      ESP_LOGD("date_display", "Special pixel @ (%d, %d)", remaining_pixels, full_rows);
-      it.draw_pixel_at(remaining_pixels, full_rows, red);
+      if (id(current_blink_state)) {
+        //ESP_LOGD("date_display", "Special pixel @ (%d, %d)", remaining_pixels, full_rows);
+        it.draw_pixel_at(remaining_pixels, full_rows, green);
+      }
+      id(current_blink_state) = !id(current_blink_state);
 
       // ESP_LOGD("date_display", "Current day: %02d", day);
       // ESP_LOGD("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
