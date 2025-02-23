@@ -6,23 +6,23 @@
     {
       "label": "Flash ESP device ttyUSB0",
       "type": "shell",
-      "command": "~/.local/bin/esphome",
+      "command": "esphome",
       "args": ["run", "${file}", "--device", "/dev/ttyUSB0"],
       "problemMatcher": []
     },
     {
       "label": "Flash ESP device ttyACM0",
       "type": "shell",
-      "command": "~/.local/bin/esphome",
+      "command": "esphome",
       "args": ["run", "${file}", "--device", "/dev/ttyACM0"],
       "problemMatcher": []
     },
     {
       "label": "Flash ESP device OTA",
       "type": "shell",
-      "command": "~/.local/bin/esphome",
+      "command": "esphome",
       "args": ["run", "${file}", "--device", "OTA"],
       "problemMatcher": []
-    },
+    }
   ]
 }
