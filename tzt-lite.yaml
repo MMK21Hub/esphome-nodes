@@ -44,6 +44,8 @@ button:
     name: "Reboot"
     entity_category: diagnostic
 
+## Speaker
+
 i2s_audio:
   i2s_lrclk_pin: 26
   i2s_bclk_pin: 27
@@ -54,3 +56,17 @@ media_player:
     dac_type: external
     i2s_dout_pin: 14
     mode: mono
+
+## LED on the devboard
+
+output:
+  - platform: ledc
+    pin: 22
+    id: board_led
+    inverted: true
+
+light:
+  - platform: status_led
+    output: board_led
+    name: "Status LED"
+    restore_mode: RESTORE_DEFAULT_OFF
