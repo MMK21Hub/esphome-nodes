@@ -8,5 +8,13 @@
     "editor.autoIndent": "advanced",
     "editor.formatOnSave": true
   },
-  "cSpell.words": ["blinky", "ESPHome", "LOGD", "LOGI", "LOGW", "LOGE"]
+  "cSpell.words": [
+    "blinky",
+    "ESPHome",
+    "holenet",
+    "LOGD",
+    "LOGE",
+    "LOGI",
+    "LOGW"
+  ]
 }

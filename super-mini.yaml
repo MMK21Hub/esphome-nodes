@@ -2,8 +2,8 @@
 
 esphome:
   name: super-mini
-  comment: ESP32 dev board to go in the back graden, as a rain sensor
-  friendly_name: Speaker box
+  comment: ESP32-C3 Super Mini (on campus)
+  friendly_name: Super Mini
   platformio_options:
     board_build.flash_mode: dio
 
@@ -22,20 +22,14 @@ ota:
   password: !secret ota_password
 
 wifi:
-  networks: !secret wifi
+  ap:
+    ssid: "Holenet"
+    password: !secret holenet_wifi_password
+  power_save_mode: none
 
 sensor:
   - platform: internal_temperature
     name: "CPU temperature"
-  - platform: wifi_signal
-    name: "Signal strength"
-    update_interval: 60s
-
-text_sensor:
-  - platform: wifi_info
-    ssid:
-      name: SSID
-      entity_category: diagnostic
 
 button:
   - platform: safe_mode
