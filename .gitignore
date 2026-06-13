@@ -4,3 +4,5 @@
 # Security
 secrets.yaml
 *.backup
+secrets/
+*.pem
