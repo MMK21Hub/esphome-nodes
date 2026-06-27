@@ -9,14 +9,20 @@
     "editor.formatOnSave": true
   },
   "cSpell.words": [
+    "BCLK",
     "blinky",
+    "devboard",
+    "DOUT",
     "eduroam",
     "ESPHome",
     "hallnet",
     "holenet",
+    "ledc",
     "LOGD",
     "LOGE",
     "LOGI",
-    "LOGW"
+    "LOGW",
+    "LRCLK",
+    "Sendspin"
   ]
 }
