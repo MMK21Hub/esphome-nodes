@@ -63,15 +63,23 @@ speaker:
     dac_type: external
     i2s_dout_pin: 14
     channel: mono
+  - platform: mixer
+    output_speaker: main_speaker
+    source_speakers:
+      - id: announcement_speaker
+      - id: media_speaker
 
 media_player:
-  - platform: speaker_source
+  - platform: speaker
     id: external_media_player
     name: Audio
+    buffer_size: 40_000
     media_pipeline:
-      speaker: main_speaker
-      sources:
-        - sendspin_media_source
+      speaker: media_speaker
+      format: MP3
+    announcement_pipeline:
+      speaker: announcement_speaker
+      format: MP3
 
 ## LED on the devboard
 
