@@ -2,8 +2,8 @@
 
 esphome:
   name: tzt-lite
-  comment: ESP32 dev board intended to power a speaker
-  friendly_name: Speaker v2
+  comment: ESP32 dev board that powers a Cube Clock speaker
+  friendly_name: Cube Clock
 
 esp32:
   board: esp32dev
@@ -44,18 +44,34 @@ button:
     name: "Reboot"
     entity_category: diagnostic
 
+## Media source
+sendspin:
+
+media_source:
+  - platform: sendspin
+    id: sendspin_media_source
+
 ## Speaker
 
 i2s_audio:
   i2s_lrclk_pin: 26
   i2s_bclk_pin: 27
 
-media_player:
+speaker:
   - platform: i2s_audio
-    name: Audio
+    id: main_speaker
     dac_type: external
     i2s_dout_pin: 14
-    mode: mono
+    channel: mono
+
+media_player:
+  - platform: speaker_source
+    id: external_media_player
+    name: Audio
+    media_pipeline:
+      speaker: main_speaker
+      sources:
+        - sendspin_media_source
 
 ## LED on the devboard
 
