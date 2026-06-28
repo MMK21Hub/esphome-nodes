@@ -23,32 +23,28 @@ ota:
 wifi:
   networks: !secret wifi
 
+debug:
+  update_interval: 5s
+
 sensor:
   - platform: internal_temperature
     name: "CPU temperature"
-  - platform: wifi_signal
-    name: "Signal strength"
-    update_interval: 60s
-
-text_sensor:
-  - platform: wifi_info
-    ssid:
-      name: SSID
-      entity_category: diagnostic
-
-button:
-  - platform: safe_mode
-    name: "Reboot safe mode"
-    entity_category: diagnostic
-  - platform: restart
-    name: "Reboot"
-    entity_category: diagnostic
+  #   - platform: wifi_signal
+  #     name: "Signal strength"
+  #     update_interval: 60s
+  - platform: debug
+    free:
+      name: "Heap memory free"
+    block:
+      name: "Largest contiguous free heap block"
 
 ## Media source
 sendspin:
 
 media_source:
   - platform: sendspin
+    buffer_size: 50_000
+    sample_rate: 32_000
     id: sendspin_media_source
 
 ## Speaker
@@ -63,22 +59,16 @@ speaker:
     dac_type: external
     i2s_dout_pin: 14
     channel: mono
-  - platform: mixer
-    output_speaker: main_speaker
-    source_speakers:
-      - id: announcement_speaker
-      - id: media_speaker
+    buffer_duration: 100ms
 
 media_player:
-  - platform: speaker
+  - platform: speaker_source
     id: external_media_player
     name: Audio
-    buffer_size: 40_000
     media_pipeline:
-      speaker: media_speaker
-      format: MP3
-    announcement_pipeline:
-      speaker: announcement_speaker
+      speaker: main_speaker
+      sources:
+        - sendspin_media_source
       format: MP3
 
 ## LED on the devboard
