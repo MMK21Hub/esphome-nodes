@@ -2,8 +2,7 @@
 
 esphome:
   name: atom-matrix
-  friendly_name: "Matrix"
-  comment: "M5Stack ATOM Matrix for LED status updates in the Living Room"
+  friendly_name: "Atom Matrix"
 
 esp32:
   board: m5stack-atom
@@ -22,7 +21,7 @@ wifi:
 
 api:
   encryption:
-    key: "JNj7PgqTdG1lCKrqJNK3bMwSIsQ4Hvv+O9bvngbCZ0s="
+    key: !secret api_key_atom_matrix
 
 ota:
   - platform: esphome
@@ -62,6 +61,16 @@ button:
     name: "Reboot"
     entity_category: diagnostic
 
+output:
+  - platform: ledc
+    pin: 25
+    id: pin_25
+
+rtttl:
+  output: pin_25
+  id: buzzer
+  gain: 60%
+
 binary_sensor:
   - platform: gpio
     pin:
@@ -71,6 +80,22 @@ binary_sensor:
     on_press:
       then:
         - light.toggle: matrix_light
+        ######################################################
+        # Must be turned on before setting frequency & level
+        ######################################################
+        - output.turn_on: pin_25
+        ######################################################
+        # Frequency sets the wave size
+        ######################################################
+        - output.ledc.set_frequency:
+            id: pin_25
+            frequency: "1kHz"
+        ######################################################
+        # level sets the %age time the PWM is on
+        ######################################################
+        - output.set_level:
+            id: pin_25
+            level: "50%"
 
 light:
   - platform: fastled_clockless # 5x5 RGB Matrix (WS2812C)
@@ -110,8 +135,8 @@ display:
       Color green = Color(0x00FF00);
       Color blue = Color(0x0000FF);
       auto time = id(time_now).now();
-      // int day = time.day_of_month;
-      int day = id(day_override).state;
+      int day = time.day_of_month;
+      // int day = id(day_override).state;
       if (day == 0 || time.year == 1970) {
         // Hack: If the year is 1970, we probably just haven't got a time from Home Assistant yet
         it.filled_rectangle(0, 0, 5, 5, red);
@@ -140,25 +165,3 @@ display:
       // ESP_LOGD("main", "Value of my datetime: %04d-%02d-%02d %0d:%02d:%02d",
       //    time.year, time.month, time.day_of_month,
       //    time.hour, time.minute, time.second);
-
-## DEVICE STATE
-
-select:
-  - platform: template
-    id: mode
-    name: "Mode"
-    optimistic: true
-    options:
-      - Christmas
-      - Wifi signal
-      - Disabled
-    initial_option: Christmas
-
-number:
-  - platform: template
-    optimistic: true
-    min_value: 1
-    max_value: 25
-    step: 1
-    id: day_override
-    name: Current day
