@@ -75,4 +75,5 @@ light:
     rgb_order: GRB
     pin: 48
     chipset: WS2811
-    num_leds: 2
+    num_leds: 1
+    default_transition_length: 0s
