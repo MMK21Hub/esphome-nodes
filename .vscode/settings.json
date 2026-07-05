@@ -23,6 +23,7 @@
     "LOGI",
     "LOGW",
     "LRCLK",
+    "PSRAM",
     "Sendspin"
   ]
 }

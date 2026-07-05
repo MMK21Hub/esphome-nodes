@@ -8,6 +8,10 @@ esp32:
   framework:
     type: esp-idf
 
+psram:
+  ignore_not_found: false
+  mode: quad
+
 logger:
 
 api:
@@ -33,6 +37,13 @@ sensor:
   - platform: debug
     free:
       name: "Heap memory free"
+    cpu_frequency:
+      name: "CPU frequency"
+    psram:
+      name: "PSRAM free"
+
+runtime_stats:
+  log_interval: 60s
 
 ## Media source
 sendspin:
@@ -45,27 +56,26 @@ media_source:
 
 ## Speaker
 
-# i2s_audio:
-#   i2s_lrclk_pin: 26
-#   i2s_bclk_pin: 27
+i2s_audio:
+  i2s_lrclk_pin: 13
+  i2s_bclk_pin: 11
 
-# speaker:
-#   - platform: i2s_audio
-#     id: main_speaker
-#     dac_type: external
-#     i2s_dout_pin: 14
-#     channel: mono
-#     buffer_duration: 100ms
+speaker:
+  - platform: i2s_audio
+    id: i2s_output
+    dac_type: external
+    i2s_dout_pin: 12
+    channel: stereo
+    # buffer_duration: 100ms
 
-# media_player:
-#   - platform: speaker_source
-#     id: external_media_player
-#     name: Audio
-#     media_pipeline:
-#       speaker: main_speaker
-#       sources:
-#         - sendspin_media_source
-#       format: MP3
+media_player:
+  - platform: speaker_source
+    id: external_media_player
+    name: Speaker
+    media_pipeline:
+      speaker: i2s_output
+      sources:
+        - sendspin_media_source
 
 ## LED on the devboard
 
@@ -77,3 +87,4 @@ light:
     chipset: WS2811
     num_leds: 1
     default_transition_length: 0s
+    restore_mode: RESTORE_DEFAULT_OFF
