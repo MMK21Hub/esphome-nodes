@@ -61,6 +61,17 @@ button:
     name: "Reboot"
     entity_category: diagnostic
 
+remote_transmitter:
+  id: ir_transmitter
+  pin: 12
+  carrier_duty_percent: 50%
+  non_blocking: true
+
+infrared:
+  - platform: ir_rf_proxy
+    name: Infrared transmitter
+    remote_transmitter_id: ir_transmitter
+
 binary_sensor:
   - platform: gpio
     pin:
