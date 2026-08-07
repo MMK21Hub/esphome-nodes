@@ -61,16 +61,6 @@ button:
     name: "Reboot"
     entity_category: diagnostic
 
-output:
-  - platform: ledc
-    pin: 25
-    id: pin_25
-
-rtttl:
-  output: pin_25
-  id: buzzer
-  gain: 60%
-
 binary_sensor:
   - platform: gpio
     pin:
@@ -80,22 +70,6 @@ binary_sensor:
     on_press:
       then:
         - light.toggle: matrix_light
-        ######################################################
-        # Must be turned on before setting frequency & level
-        ######################################################
-        - output.turn_on: pin_25
-        ######################################################
-        # Frequency sets the wave size
-        ######################################################
-        - output.ledc.set_frequency:
-            id: pin_25
-            frequency: "1kHz"
-        ######################################################
-        # level sets the %age time the PWM is on
-        ######################################################
-        - output.set_level:
-            id: pin_25
-            level: "50%"
 
 light:
   - platform: fastled_clockless # 5x5 RGB Matrix (WS2812C)
@@ -109,16 +83,6 @@ light:
     default_transition_length: 0s
     internal: true
 
-# display:
-#   - platform: addressable_light
-#     addressable_light_id: matrix_light
-#     id: matrix_display
-#     height: 5
-#     width: 5
-#     rotation: 180 # USB port is at the bottom
-#     update_interval: 2s
-#     lambda: |-
-#       it.fill(COLOR_ON);
 display:
   - platform: addressable_light
     id: matrix_display
