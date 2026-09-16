@@ -1,7 +1,7 @@
 # Boilerplate
 esphome:
-  name: seeed-acacia
-  friendly_name: Seeed acacia
+  name: seeed-cherry
+  friendly_name: Seeed cherry
   # platformio_options:
   #   board_build.flash_mode: dio
   #   board_build.mcu: esp32c3
@@ -17,12 +17,12 @@ logger:
 
 api:
   encryption:
-    key: !secret api_key_seeed_acacia
+    key: !secret api_key_seeed_cherry
 
 ota:
   - platform: esphome
     encryption:
-      key: !secret api_key_seeed_acacia
+      key: !secret api_key_seeed_cherry
 
 wifi:
   networks: !secret wifi
