@@ -1,0 +1,87 @@
+# Boilerplate
+esphome:
+  name: seeed-acacia
+  friendly_name: Seeed acacia
+  # platformio_options:
+  #   board_build.flash_mode: dio
+  #   board_build.mcu: esp32c3
+
+esp32:
+  variant: esp32c3
+  board: seeed_xiao_esp32c3
+  framework:
+    type: esp-idf
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+# api:
+#   encryption:
+#     key: !secret api_key_seeed_acacia
+
+# ota:
+#   - platform: esphome
+#     encryption:
+#       key: !secret api_key_seeed_acacia
+
+# wifi:
+#   networks: !secret wifi
+
+wifi:
+  ap:
+    ssid: "Seeed Acacia"
+    password: "aaaaaaaa"
+
+web_server:
+  port: 80
+  local: true
+
+text_sensor:
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+  - platform: version
+    name: "Firmware"
+    entity_category: diagnostic
+
+output:
+  - platform: ledc
+    pin: 10 # Blue wire, PWM pin
+    id: fan_pwm
+    frequency: 25 kHz
+
+sensor:
+  - platform: pulse_counter
+    pin:
+      number: 7 # Yellow wire, sense pin
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: "RPM sensor"
+    update_interval: 10s
+    id: rpm_sensor
+    unit_of_measurement: RPM
+    filters:
+      - multiply: 0.5 # because it gives 2 pulses per revolution
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 10s
+  - platform: internal_temperature
+    name: "CPU temperature"
+
+number:
+  - platform: template
+    name: "Speed control"
+    id: speed_control
+    min_value: 0
+    max_value: 100
+    step: 1
+    unit_of_measurement: "%"
+    #optimistic: true
+    set_action:
+      then:
+        - output.set_level:
+            id: fan_pwm
+            level: !lambda "return x / 100.0;"

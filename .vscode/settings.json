@@ -17,6 +17,7 @@
     "ESPHome",
     "hallnet",
     "holenet",
+    "JTAG",
     "ledc",
     "LOGD",
     "LOGE",
@@ -24,6 +25,9 @@
     "LOGW",
     "LRCLK",
     "PSRAM",
-    "Sendspin"
+    "PULLUP",
+    "Seeed",
+    "Sendspin",
+    "xiao"
   ]
 }
