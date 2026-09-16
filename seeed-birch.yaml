@@ -36,8 +36,12 @@ sensor:
     name: "CPU temperature"
   - platform: rotary_encoder
     name: "Knob"
-    pin_a: 8
-    pin_b: 9
+    # This makes clockwise +ve & anti-clockwise -ve
+    pin_a: 9 # DT
+    pin_b: 8 # CLK
+    # 0-100 for volume control
+    min_value: 0
+    max_value: 100
 
 binary_sensor:
   - platform: gpio

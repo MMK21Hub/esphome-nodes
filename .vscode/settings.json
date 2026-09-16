@@ -17,6 +17,7 @@
     "ESPHome",
     "hallnet",
     "holenet",
+    "homeassistant",
     "JTAG",
     "ledc",
     "LOGD",
