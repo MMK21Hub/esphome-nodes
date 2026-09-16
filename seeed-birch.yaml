@@ -35,13 +35,37 @@ sensor:
   - platform: internal_temperature
     name: "CPU temperature"
   - platform: rotary_encoder
+    id: knob
     name: "Knob"
     # This makes clockwise +ve & anti-clockwise -ve
     pin_a: 9 # DT
     pin_b: 8 # CLK
-    # 0-100 for volume control
+    # 0-50 volume control
     min_value: 0
-    max_value: 100
+    max_value: 50
+    on_value:
+      then:
+        - homeassistant.action:
+            action: media_player.volume_set
+            data:
+              entity_id: media_player.cube_clock
+              volume_level: !lambda "return (x / 50.0);"
+  - platform: homeassistant
+    id: cube_clock_volume
+    entity_id: media_player.cube_clock
+    attribute: volume_level
+    # on_value:
+    #   then:
+    #     - lambda: |-
+    #         // this creates jank if we're the ones setting the value
+    #         int knob_value = (int)(x * 50.0);
+    #         id(knob).set_value(knob_value);
+
+text_sensor:
+  - platform: homeassistant
+    id: cube_clock_group_members
+    entity_id: media_player.cube_clock
+    attribute: group_members
 
 binary_sensor:
   - platform: gpio
@@ -52,3 +76,30 @@ binary_sensor:
         input: true
         pullup: true
     name: "Knob button"
+    filters:
+      - delayed_on_off: 20ms
+    on_click:
+      then:
+        - homeassistant.action:
+            action: media_player.media_play_pause
+            data:
+              entity_id: media_player.cube_clock
+    # on_multi_click:
+    #   - timing:
+    #       - ON for at most 1s
+    #     then:
+    #       - if:
+    #           condition:
+    #             lambda: |-
+    #               return id(cube_clock_group_members).state.empty();
+    #           then:
+    #             - homeassistant.action:
+    #                 action: media_player.join
+    #                 data:
+    #                   entity_id: media_player.cube_clock
+    #                   group_members: "media_player.nest_mini_speaker"
+    #           else:
+    #             - homeassistant.action:
+    #                 action: media_player.unjoin
+    #                 data:
+    #                   entity_id: "media_player.nest_mini_speaker"
