@@ -1,0 +1,50 @@
+esphome:
+  name: seeed-dark-oak
+  friendly_name: Seeed dark oak
+
+esp32:
+  variant: esp32c3
+  board: seeed_xiao_esp32c3
+  framework:
+    type: esp-idf
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+api:
+  encryption:
+    key: !secret api_key_seeed_dark_oak
+
+ota:
+  - platform: esphome
+    encryption:
+      key: !secret api_key_seeed_dark_oak
+
+wifi:
+  networks: !secret wifi_hous
+
+text_sensor:
+  - platform: wifi_info
+    ssid:
+      name: SSID
+      entity_category: diagnostic
+  - platform: version
+    name: "Firmware"
+    entity_category: diagnostic
+
+# Bluetooth proxy
+esp32_ble_tracker:
+  id: ble_tracker
+  scan_parameters:
+    active: false
+    continuous: false
+
+bluetooth_proxy:
+  active: false
+
+sensor:
+  - platform: wifi_signal
+    name: "Signal strength"
+    update_interval: 10s
+  - platform: internal_temperature
+    name: "CPU temperature"
