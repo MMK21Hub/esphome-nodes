@@ -33,14 +33,8 @@ text_sensor:
     entity_category: diagnostic
 
 # Bluetooth proxy
-esp32_ble_tracker:
-  id: ble_tracker
-  scan_parameters:
-    active: false
-    continuous: false
-
 bluetooth_proxy:
-  active: false
+  active: true
 
 sensor:
   - platform: wifi_signal
